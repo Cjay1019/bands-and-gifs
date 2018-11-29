@@ -3,10 +3,10 @@
 
 var bands = [
   "Weezer",
-  "Kanye West",
+  "Blink 182",
   "My Chemical Romance",
   "Paramore",
-  "Childish Gambino",
+  "Fountains of Wayne",
   "Say Anything",
   "Bright Eyes",
   "Metric",
@@ -32,12 +32,18 @@ $("#buttons-section").on("click", ".band-button", printGifs);
 function printGifs() {
   var currentBand = $(this).attr("data-name");
   var queryURL =
-    "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" +
-    currentBand;
+    "https://api.giphy.com/v1/gifs/search?q=" +
+    currentBand +
+    "&api_key=sRyL14LTX3neCJUAbSNhNNlQPoidsBIA&tag&limit=1";
+  queryURL = queryURL.replace(/\s+/g, "-");
+  console.log(queryURL);
 
   $.ajax({ url: queryURL, method: "GET" }).then(function(response) {
-    var stillURL = response.data.images.fixed_height_still.url;
-    var loopURL = response.data.images.fixed_height.url;
+    var stillURL = response.data[0].images.fixed_height_still.url;
+    var loopURL = response.data[0].images.fixed_height.url;
+    var rating = response.data[0].rating;
+    var gifDiv = $("<div>");
+    var ratingP = $("<p>").text("Rating: " + rating.toUpperCase());
     var bandImage = $("<img>").attr({
       src: stillURL,
       alt: "band image",
@@ -46,7 +52,9 @@ function printGifs() {
       "data-loop": loopURL,
       class: "band-images"
     });
-    $("#gifs-section").prepend(bandImage);
+    gifDiv.append(ratingP);
+    gifDiv.append(bandImage);
+    $("#gifs-section").prepend(gifDiv);
   });
 }
 
@@ -68,7 +76,7 @@ function printButtons() {
     var newButton = $("<button>")
       .attr({
         class: "btn btn-primary band-button",
-        "data-name": bands[i]
+        "data-name": bands[i] + "-band"
       })
       .text(bands[i]);
     $("#buttons-section").append(newButton);
