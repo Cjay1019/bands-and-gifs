@@ -1,6 +1,4 @@
-// FIND A WAY TO MAKE THEM BAND SPECIFIC
-// TOP RESULTS INSTEAD OF RANDOM
-
+// LIST OF BANDS TO BE DISPLAYED ON PAGE LOAD
 var bands = [
   "Weezer",
   "Blink 182",
@@ -15,6 +13,10 @@ var bands = [
   "The Decemberists"
 ];
 
+// COUNTER FOR GIF SWAPPING
+var currentGif = 1;
+
+// INITIALIZATION
 printButtons();
 
 // NEW BUTTON CLICK HANDLER ADDS USER'S NEW BAND
@@ -24,40 +26,144 @@ $("#add-band-button").on("click", function(e) {
   bands.push(newBand);
   printButtons();
 });
-
-$("#gifs-section").on("click", ".band-images", onOFF);
-
+// PLAYING AND PAUSING GIF CLICK HANDLER
+$("#modal-body").on("click", ".band-images", onOFF);
+// UPCOMING SHOWS BUTTON CLICK HANDLER
+$("#modal-body").on("click", "#shows-button", printBandInfo);
+// BAND NAME BUTTON CLICK HANDLER
 $("#buttons-section").on("click", ".band-button", printGifs);
+// CHANGE GIF BUTTON CLICK HANDLER
+$(".modal-footer").on("click", "#new-gif-button", changeGif);
 
+// OPENS THE MODAL AND PRINTS BAND GIF, GIF RATING, BAND NAME, AND SHOWS BUTTON
 function printGifs() {
   var currentBand = $(this).attr("data-name");
+  currentGif = 1;
+  $("#new-gif-button").attr("data-name", currentBand);
   var queryURL =
     "https://api.giphy.com/v1/gifs/search?q=" +
     currentBand +
-    "&api_key=sRyL14LTX3neCJUAbSNhNNlQPoidsBIA&tag&limit=1";
+    "-band" +
+    "&api_key=sRyL14LTX3neCJUAbSNhNNlQPoidsBIA&rating=pg";
   queryURL = queryURL.replace(/\s+/g, "-");
-  console.log(queryURL);
-
   $.ajax({ url: queryURL, method: "GET" }).then(function(response) {
     var stillURL = response.data[0].images.fixed_height_still.url;
     var loopURL = response.data[0].images.fixed_height.url;
     var rating = response.data[0].rating;
-    var gifDiv = $("<div>");
-    var ratingP = $("<p>").text("Rating: " + rating.toUpperCase());
+    var gifDiv = $("<div>").attr("id", "gif-div");
+    var ratingP = $("<p>")
+      .attr("id", "rating")
+      .text("Gif rating: " + rating.toUpperCase() + " (Click the gif to play)");
+    var showsButton = $("<div>")
+      .attr({
+        id: "shows-button",
+        class: "btn btn-primary",
+        "data-name": currentBand
+      })
+      .text("See upcoming shows");
     var bandImage = $("<img>").attr({
       src: stillURL,
       alt: "band image",
       "data-state": "still",
       "data-still": stillURL,
       "data-loop": loopURL,
+      id: "band-gif",
       class: "band-images"
     });
+    $("#band-title").text(currentBand.toUpperCase());
     gifDiv.append(ratingP);
     gifDiv.append(bandImage);
-    $("#gifs-section").prepend(gifDiv);
+    gifDiv.append("<br>");
+    gifDiv.append(showsButton);
+    $("#modal-body").html(gifDiv);
   });
 }
 
+// CYCLES THROUGH THE 25 GIFS IN THE JSON OBJECT AND PRINTS OVER THE LAST ONE DISPLAYED
+function changeGif() {
+  var currentBand = $(this).attr("data-name");
+  if (currentGif > 23) {
+    currentGif = 0;
+  } else {
+    currentGif++;
+  }
+  var queryURL =
+    "https://api.giphy.com/v1/gifs/search?q=" +
+    currentBand +
+    "-band" +
+    "&api_key=sRyL14LTX3neCJUAbSNhNNlQPoidsBIA&rating=pg";
+  queryURL = queryURL.replace(/\s+/g, "-");
+  $.ajax({ url: queryURL, method: "GET" }).then(function(response) {
+    var stillURL = response.data[currentGif].images.fixed_height_still.url;
+    var loopURL = response.data[currentGif].images.fixed_height.url;
+    var rating = response.data[currentGif].rating;
+    $("#rating").text(
+      "Gif rating: " + rating.toUpperCase() + " (Click the gif to play)"
+    );
+    $("#band-gif").attr({
+      src: stillURL,
+      alt: "band image",
+      "data-state": "still",
+      "data-still": stillURL,
+      "data-loop": loopURL,
+      id: "band-gif"
+    });
+  });
+}
+
+// PRINTS THE BANDS UPCOMING SHOWS CAPPED AT 3 OR PRINTS A NO SHOWS MESSAGE
+function printBandInfo() {
+  var currentBand = $(this).attr("data-name");
+  var queryURL =
+    "https://rest.bandsintown.com/artists/" +
+    currentBand +
+    "/events/?app_id=codingbootcamp";
+  queryURL = queryURL.replace(/\s+/g, "");
+  $("#shows-button").remove();
+  console.log(queryURL);
+  $.ajax({ url: queryURL, method: "GET" }).then(function(response) {
+    var showsH2 = $("<h2>").text("Upcoming Shows");
+    console.log(response);
+    if (response.length == 0) {
+      var noShows = $("<h2>").text("No upcoming shows");
+      $("#gif-div").append(noShows);
+    } else if (response.length > 2) {
+      $("#gif-div").append(showsH2);
+      for (i = 0; i < 3; i++) {
+        var venue = $("<p>").text(response[i].venue.name);
+        var date = $("<p>").text(response[i].datetime);
+        var location = $("<p>").text(
+          response[i].venue.city +
+            ", " +
+            response[i].venue.region +
+            ", " +
+            response[i].venue.country
+        );
+        $("#gif-div").append(date);
+        $("#gif-div").append(venue);
+        $("#gif-div").append(location);
+      }
+    } else {
+      $("#gif-div").append(showsH2);
+      for (j = 0; j < response.length; j++) {
+        var venue = $("<p>").text(response[j].venue.name);
+        var date = $("<p>").text(response[j].datetime);
+        var location = $("<p>").text(
+          response[j].venue.city +
+            ", " +
+            response[j].venue.region +
+            ", " +
+            response[j].venue.country
+        );
+        $("#gif-div").append(date);
+        $("#gif-div").append(venue);
+        $("#gif-div").append(location);
+      }
+    }
+  });
+}
+
+// PLAYS AND PAUSES THE DISPLAYED GIF
 function onOFF() {
   var currentState = $(this).attr("data-state");
   var currentLoopURL = $(this).attr("data-loop");
@@ -76,7 +182,9 @@ function printButtons() {
     var newButton = $("<button>")
       .attr({
         class: "btn btn-primary band-button",
-        "data-name": bands[i] + "-band"
+        "data-name": bands[i],
+        "data-toggle": "modal",
+        "data-target": "#band-modal"
       })
       .text(bands[i]);
     $("#buttons-section").append(newButton);
