@@ -4,13 +4,13 @@ var bands = [
   "Blink 182",
   "My Chemical Romance",
   "Paramore",
-  "Fountains of Wayne",
-  "Say Anything",
-  "Bright Eyes",
-  "Metric",
-  "Rilo Kiley",
+  "Metallica",
+  "Maroon 5",
+  "Panic at the Disco",
+  "Fall Out Boy",
+  "Imagine Dragons",
   "The Killers",
-  "The Decemberists"
+  "BTS"
 ];
 
 // COUNTER FOR GIF SWAPPING
