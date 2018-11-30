@@ -31,19 +31,48 @@
     <!-- MAIN CONTENT -->
     <main class="z-depth-1">
       <!-- BUTTONS SECTION -->
-      <section id="buttons-section"></section>
+      <section class="pb-5" id="buttons-section"></section>
       <!-- ADD BUTTONS SECTION -->
+      <!--
+        <section id="add-section">
+          <form id="band-form">
+            <label for="new-band-input"></label>
+            <input type="text" id="new-band-input" />
+            <input
+              class="btn btn-primary"
+              id="add-band-button"
+              type="submit"
+              value="Add a band or artist"
+            />
+          </form>
+        </section>
+      -->
       <section id="add-section">
-        <form id="band-form">
-          <label for="new-band-input"></label>
-          <input type="text" id="new-band-input" />
-          <input
-            class="btn btn-primary"
-            id="add-band-button"
-            type="submit"
-            value="Add a band or artist"
-          />
-        </form>
+        <div class="card">
+          <h5 class="card-header primary-color white-text text-center py-4">
+            <strong>Add Your Own Band Button</strong>
+          </h5>
+
+          <!-- Card content -->
+          <div class="card-body px-lg-5">
+            <!-- Form -->
+            <form id="band-form" class="md-form" style="color: #757575;">
+              <div class="text-center"></div>
+
+              <input type="text" id="new-band-input" class="form-control" />
+              <label for="new-band-input">Band Name</label>
+
+              <button
+                class="btn btn-outline-primary btn-rounded btn-block z-depth-0 my-4 waves-effect"
+                type="submit"
+                value="Add a band or artist"
+                id="add-band-button"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
       </section>
       <!-- MODAL -->
       <div

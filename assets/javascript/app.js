@@ -68,7 +68,7 @@ function printGifs() {
       "data-still": stillURL,
       "data-loop": loopURL,
       id: "band-gif",
-      class: "band-images"
+      class: "band-images img-fluid hoverable rounded"
     });
     $("#band-title").text(currentBand.toUpperCase());
     gifDiv.append(ratingP);
@@ -120,10 +120,8 @@ function printBandInfo() {
     "/events/?app_id=codingbootcamp";
   queryURL = queryURL.replace(/\s+/g, "");
   $("#shows-button").remove();
-  console.log(queryURL);
   $.ajax({ url: queryURL, method: "GET" }).then(function(response) {
     var showsH2 = $("<h2>").text("Upcoming Shows");
-    console.log(response);
     if (response.length == 0) {
       var noShows = $("<h2>").text("No upcoming shows");
       $("#gif-div").append(noShows);
