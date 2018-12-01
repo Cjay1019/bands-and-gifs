@@ -57,7 +57,7 @@ function printGifs() {
     var showsButton = $("<div>")
       .attr({
         id: "shows-button",
-        class: "btn btn-primary",
+        class: "btn btn-mdb-color",
         "data-name": currentBand
       })
       .text("See upcoming shows");
@@ -179,7 +179,7 @@ function printButtons() {
   for (i = 0; i < bands.length; i++) {
     var newButton = $("<button>")
       .attr({
-        class: "btn btn-primary band-button",
+        class: "btn btn-mdb-color band-button",
         "data-name": bands[i],
         "data-toggle": "modal",
         "data-target": "#band-modal"
