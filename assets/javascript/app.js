@@ -15,6 +15,8 @@ var bands = [
 
 // COUNTER FOR GIF SWAPPING
 var currentGif = 1;
+// STORES RATING DISPLAY ON THE GLOBAL SCOPE
+var rating;
 
 // INITIALIZATION
 printButtons();
@@ -49,7 +51,7 @@ function printGifs() {
   $.ajax({ url: queryURL, method: "GET" }).then(function(response) {
     var stillURL = response.data[0].images.fixed_height_still.url;
     var loopURL = response.data[0].images.fixed_height.url;
-    var rating = response.data[0].rating;
+    rating = response.data[0].rating;
     var gifDiv = $("<div>").attr("id", "gif-div");
     var ratingP = $("<p>")
       .attr("id", "rating")
@@ -96,7 +98,7 @@ function changeGif() {
   $.ajax({ url: queryURL, method: "GET" }).then(function(response) {
     var stillURL = response.data[currentGif].images.fixed_height_still.url;
     var loopURL = response.data[currentGif].images.fixed_height.url;
-    var rating = response.data[currentGif].rating;
+    rating = response.data[currentGif].rating;
     $("#rating").text(
       "Gif rating: " + rating.toUpperCase() + " (Click the gif to play)"
     );
@@ -128,15 +130,24 @@ function printBandInfo() {
     } else if (response.length > 2) {
       $("#gif-div").append(showsH2);
       for (i = 0; i < 3; i++) {
-        var venue = $("<p>").text(response[i].venue.name);
-        var date = $("<p>").text(response[i].datetime);
-        var location = $("<p>").text(
-          response[i].venue.city +
-            ", " +
-            response[i].venue.region +
-            ", " +
-            response[i].venue.country
-        );
+        var dateTime = response[i].datetime;
+        dateTime = moment(dateTime).format("MM/DD/YYYY");
+        var venue = $("<p>")
+          .text(response[i].venue.name)
+          .attr("id", "venue");
+        var date = $("<p>")
+          .text(dateTime)
+          .attr("id", "date");
+        var location = $("<p>")
+          .text(
+            response[i].venue.city +
+              ", " +
+              response[i].venue.region +
+              ", " +
+              response[i].venue.country
+          )
+          .attr("id", "location");
+
         $("#gif-div").append(date);
         $("#gif-div").append(venue);
         $("#gif-div").append(location);
@@ -168,8 +179,15 @@ function onOFF() {
   var currentStillURL = $(this).attr("data-still");
   if (currentState === "still") {
     $(this).attr({ "data-state": "loop", src: currentLoopURL });
+    $("#rating").text(
+      "Gif rating: " + rating.toUpperCase() + " (Click the gif to stop)"
+    );
   } else {
     $(this).attr({ "data-state": "still", src: currentStillURL });
+
+    $("#rating").text(
+      "Gif rating: " + rating.toUpperCase() + " (Click the gif to play)"
+    );
   }
 }
 

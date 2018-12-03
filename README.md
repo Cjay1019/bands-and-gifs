@@ -1,1 +1,11 @@
-# bands-and-gifs
+# Bands and Gifs Application
+
+This application was created to demonstrate the use of multiple API's acting in harmony together, as well as using javascript to dynamically create elements based on user input. It utilizes the Giphy & Bands in Town API's to dynamically display information based on user input. https://cjay1019.github.io/bands-and-gifs/
+
+## What it Does
+
+There are several buttons that appear on page load listing a multitude of bands, as well as a form that allows the user to enter a new band. If the user enters a new band and presses submit, a new button is rendered featuring the new band. When the user clicks any button, including newly added ones, a modal appears on the screen. It contains a still gif of the band, a close button, and button that shows the bands upcoming shows, and a see a new gif button. If the user clicks on the gif, it starts looping, and will stop if clicked again. The see shows button displays the bands next three upcoming shows, and the see a new gif button replaces the current gif with a new one. WHen the user presses close the modal disappears, and the process can be repeated on a different button.
+
+## How it Works
+
+On page load, 11 buttons are rendered from an array, listing bands. If the user enters a new band with the form below, app pulls the users input and creates a new button with displaying what the user entered. Upon click, the buttons open a modal and pulls 25 gifs of the respective band from the Giphy API. It then displays the first gif of said list in still form, and two new buttons. If the user clicks on the gif, the app changes the source of the gif to url of the looping version, causing it play, and the opposite if it's clicked again. If the user clicks the "SEE UPCOMING SHOWS" button, the app searches the bands in town API for the respective band's upcoming shows, the app then displays them all capped at three. If the band has no upcoming shows, a message is printing saying so. If the user clicks on the the "SEE A DIFFERENT GIF" button, a variable is incremented by one, and said variable is used to pull the next gif from the 25 acquired earlier. It then replaces the current gif with the new one in still form.
